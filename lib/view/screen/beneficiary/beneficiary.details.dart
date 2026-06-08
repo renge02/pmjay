@@ -2,22 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:pmjay/database/database_helper.dart';
 import 'package:pmjay/models/masterModel/master.model.dart';
 
-
 class BeneficiaryDetailsScreen extends StatefulWidget {
   final String aadhaarNo;
 
-  const BeneficiaryDetailsScreen({
-    super.key,
-    required this.aadhaarNo,
-  });
+  const BeneficiaryDetailsScreen({super.key, required this.aadhaarNo});
 
   @override
   State<BeneficiaryDetailsScreen> createState() =>
       _BeneficiaryDetailsScreenState();
 }
 
-class _BeneficiaryDetailsScreenState
-    extends State<BeneficiaryDetailsScreen> {
+class _BeneficiaryDetailsScreenState extends State<BeneficiaryDetailsScreen> {
   Beneficiary? beneficiary;
   bool isLoading = true;
   Map<String, String> exclusionAnswers = {
@@ -27,6 +22,7 @@ class _BeneficiaryDetailsScreenState
     "Pending CAA Application": "",
     "Found in ASDD List": "",
   };
+
   @override
   void initState() {
     super.initState();
@@ -34,32 +30,26 @@ class _BeneficiaryDetailsScreenState
   }
 
   Future<void> loadBeneficiary() async {
-    beneficiary = await DatabaseHelper.instance
-        .getBeneficiary(widget.aadhaarNo);
+    beneficiary = await DatabaseHelper.instance.getBeneficiary(
+      widget.aadhaarNo,
+    );
 
     setState(() {
       isLoading = false;
     });
   }
 
-
-
   Widget buildField(
-      String label,
-      String value, {
-        double width = double.infinity,
-      }) {
+    String label,
+    String value, {
+    double width = double.infinity,
+  }) {
     return SizedBox(
       width: width,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            label,
-            style: const TextStyle(
-              fontWeight: FontWeight.w600,
-            ),
-          ),
+          Text(label, style: const TextStyle(fontWeight: FontWeight.w600)),
           const SizedBox(height: 5),
           TextFormField(
             initialValue: value,
@@ -68,8 +58,7 @@ class _BeneficiaryDetailsScreenState
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
-              contentPadding:
-              const EdgeInsets.symmetric(
+              contentPadding: const EdgeInsets.symmetric(
                 horizontal: 12,
                 vertical: 12,
               ),
@@ -90,10 +79,7 @@ class _BeneficiaryDetailsScreenState
           children: [
             Text(
               title,
-              style: const TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: 15,
-              ),
+              style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 15),
             ),
             const SizedBox(height: 10),
             Row(
@@ -134,28 +120,18 @@ class _BeneficiaryDetailsScreenState
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return const Scaffold(
-        body: Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          "Beneficiary Details",
-        ),
-      ),
+      appBar: AppBar(title: const Text("Beneficiary Details")),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-
             /// BASIC DETAILS
             Card(
               elevation: 2,
@@ -165,15 +141,13 @@ class _BeneficiaryDetailsScreenState
                   children: [
                     Container(
                       width: double.infinity,
-                      padding:
-                      const EdgeInsets.all(12),
+                      padding: const EdgeInsets.all(12),
                       color: Colors.green,
                       child: const Text(
                         "A. Basic Beneficiary Details",
                         style: TextStyle(
                           color: Colors.white,
-                          fontWeight:
-                          FontWeight.bold,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
@@ -185,16 +159,14 @@ class _BeneficiaryDetailsScreenState
                         Expanded(
                           child: buildField(
                             "Aadhaar Number",
-                            beneficiary!
-                                .aadhaarNo,
+                            beneficiary!.aadhaarNo,
                           ),
                         ),
                         const SizedBox(width: 10),
                         Expanded(
                           child: buildField(
                             "Applicant Name",
-                            beneficiary!
-                                .applicantName,
+                            beneficiary!.applicantName,
                           ),
                         ),
                       ],
@@ -207,45 +179,30 @@ class _BeneficiaryDetailsScreenState
                         Expanded(
                           child: buildField(
                             "Mobile Number",
-                            beneficiary!
-                                .mobileNumber,
+                            beneficiary!.mobileNumber,
                           ),
                         ),
                         const SizedBox(width: 10),
                         Expanded(
-                          child: buildField(
-                            "Gender",
-                            beneficiary!
-                                .gender,
-                          ),
+                          child: buildField("Gender", beneficiary!.gender),
                         ),
                       ],
                     ),
 
                     const SizedBox(height: 10),
 
-                    buildField(
-                      "Address",
-                      beneficiary!.address,
-                    ),
+                    buildField("Address", beneficiary!.address),
 
                     const SizedBox(height: 10),
 
                     Row(
                       children: [
                         Expanded(
-                          child: buildField(
-                            "District",
-                            beneficiary!
-                                .district,
-                          ),
+                          child: buildField("District", beneficiary!.district),
                         ),
                         const SizedBox(width: 10),
                         Expanded(
-                          child: buildField(
-                            "Block",
-                            beneficiary!.block,
-                          ),
+                          child: buildField("Block", beneficiary!.block),
                         ),
                       ],
                     ),
@@ -257,18 +214,12 @@ class _BeneficiaryDetailsScreenState
                         Expanded(
                           child: buildField(
                             "Gram Panchayat",
-                            beneficiary!
-                                .gramPanchayat,
+                            beneficiary!.gramPanchayat,
                           ),
                         ),
                         const SizedBox(width: 10),
                         Expanded(
-                          child: buildField(
-                            "Ward",
-                            beneficiary!
-                                .ward ??
-                                "",
-                          ),
+                          child: buildField("Ward", beneficiary!.ward ?? ""),
                         ),
                       ],
                     ),
@@ -280,17 +231,14 @@ class _BeneficiaryDetailsScreenState
                         Expanded(
                           child: buildField(
                             "Family Head Name",
-                            beneficiary!
-                                .familyHeadName,
+                            beneficiary!.familyHeadName,
                           ),
                         ),
                         const SizedBox(width: 10),
                         Expanded(
                           child: buildField(
                             "Family Members",
-                            beneficiary!
-                                .familyMembersCount
-                                .toString(),
+                            beneficiary!.familyMembersCount.toString(),
                           ),
                         ),
                       ],
@@ -305,56 +253,48 @@ class _BeneficiaryDetailsScreenState
             /// EXCLUSION CRITERIA
             Card(
               child: Padding(
-                padding:
-                const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
                 child: Column(
-                  crossAxisAlignment:
-                  CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
                       width: double.infinity,
-                      padding:
-                      const EdgeInsets.all(12),
+                      padding: const EdgeInsets.all(12),
                       color: Colors.green,
                       child: const Text(
                         "B. Exclusive Criteria Check",
                         style: TextStyle(
                           color: Colors.white,
-                          fontWeight:
-                          FontWeight.bold,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
 
                     const SizedBox(height: 16),
 
-                    exclusionCard(
-                      "Family Income > 8 lakh per year",
-                    ),
+                    exclusionCard("Family Income > 8 lakh per year"),
 
-                    exclusionCard(
-                      "Any member paying Income Tax",
-                    ),
+                    exclusionCard("Any member paying Income Tax"),
 
-                    exclusionCard(
-                      "Pending under SIR Adjudication",
-                    ),
+                    exclusionCard("Pending under SIR Adjudication"),
 
-                    exclusionCard(
-                      "Pending CAA Application",
-                    ),
+                    exclusionCard("Pending CAA Application"),
 
-                    exclusionCard(
-                      "Found in ASDD List",
-                    ),
+                    exclusionCard("Found in ASDD List"),
 
                     const SizedBox(height: 20),
 
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed: () {
+                        onPressed: () async {
                           print(exclusionAnswers);
+                          await DatabaseHelper.instance.updateExclusionCriteria(
+                            beneficiary!.aadhaarNo,
+                            '1',
+                            DateTime.now().toIso8601String(),
+                            exclusionAnswers,
+                          );
                         },
                         child: const Text("Submit"),
                       ),

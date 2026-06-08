@@ -2,7 +2,6 @@ import 'package:path/path.dart';
 import 'package:pmjay/models/masterModel/master.model.dart';
 import 'package:sqflite/sqflite.dart';
 
-
 class DatabaseHelper {
   static final DatabaseHelper instance = DatabaseHelper._();
 
@@ -19,11 +18,7 @@ class DatabaseHelper {
   Future<Database> initDB() async {
     String path = join(await getDatabasesPath(), 'pmjay.db');
 
-    return await openDatabase(
-      path,
-      version: 1,
-      onCreate: _createDB,
-    );
+    return await openDatabase(path, version: 1, onCreate: _createDB);
   }
 
   Future<void> _createDB(Database db, int version) async {
@@ -47,14 +42,19 @@ class DatabaseHelper {
         rationCardNo TEXT,
         familyHeadName TEXT,
         familyMembersCount INTEGER,
-        familyId TEXT
+        familyId TEXT,
+        
+        
+  familyIncomeExclusion TEXT DEFAULT '',
+  incomeTaxExclusion TEXT DEFAULT '',
+  sirAdjudicationExclusion TEXT DEFAULT '',
+  caaApplicationExclusion TEXT DEFAULT '',
+  asddListExclusion TEXT DEFAULT ''
       )
     ''');
   }
 
-  Future<void> insertBeneficiaries(
-      List<Beneficiary> beneficiaries) async {
-
+  Future<void> insertBeneficiaries(List<Beneficiary> beneficiaries) async {
     final db = await database;
 
     Batch batch = db.batch();
@@ -67,10 +67,7 @@ class DatabaseHelper {
       );
     }
 
-    await batch.commit(
-      noResult: true,
-      continueOnError: true,
-    );
+    await batch.commit(noResult: true, continueOnError: true);
   }
 
   Future<List<Beneficiary>> getBeneficiaries() async {
@@ -84,8 +81,7 @@ class DatabaseHelper {
     return result.map((e) => Beneficiary.fromJson(e)).toList();
   }
 
-  Future<List<Beneficiary>> searchBeneficiaries(
-      String keyword) async {
+  Future<List<Beneficiary>> searchBeneficiaries(String keyword) async {
     final db = await database;
 
     final result = await db.query(
@@ -96,24 +92,16 @@ class DatabaseHelper {
       OR aadhaarNo LIKE ?
       OR familyId LIKE ?
     ''',
-      whereArgs: [
-        '%$keyword%',
-        '%$keyword%',
-        '%$keyword%',
-        '%$keyword%',
-      ],
+      whereArgs: ['%$keyword%', '%$keyword%', '%$keyword%', '%$keyword%'],
     );
 
     return result.map((e) => Beneficiary.fromJson(e)).toList();
   }
 
-  Future<Beneficiary?> getBeneficiary(
-      String aadhaarNo) async {
-
+  Future<Beneficiary?> getBeneficiary(String aadhaarNo) async {
     final db = await database;
 
-    final List<Map<String, dynamic>> result =
-    await db.query(
+    final List<Map<String, dynamic>> result = await db.query(
       'beneficiaries',
       where: 'aadhaarNo = ?',
       whereArgs: [aadhaarNo],
@@ -125,5 +113,33 @@ class DatabaseHelper {
     }
 
     return null;
+  }
+
+  Future<void> updateExclusionCriteria(
+    String aadhaarNo,
+    String syncStatus,
+    String syncDate,
+    Map<String, String> answers,
+  ) async {
+    final db = await database;
+
+    await db.update(
+      'beneficiaries',
+      {
+        'familyIncomeExclusion':
+            answers['Family Income > 8 lakh per year'] ?? '',
+        'incomeTaxExclusion': answers['Any member paying Income Tax'] ?? '',
+        'sirAdjudicationExclusion':
+            answers['Pending under SIR Adjudication'] ?? '',
+        'caaApplicationExclusion': answers['Pending CAA Application'] ?? '',
+        'asddListExclusion': answers['Found in ASDD List'] ?? '',
+
+        // Sync fields
+        'syncStatus': syncStatus,
+        'syncDate': syncDate,
+      },
+      where: 'aadhaarNo = ?',
+      whereArgs: [aadhaarNo],
+    );
   }
 }

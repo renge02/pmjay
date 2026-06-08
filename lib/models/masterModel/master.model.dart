@@ -16,6 +16,11 @@ class Beneficiary {
   final String familyHeadName;
   final int familyMembersCount;
   final String familyId;
+  String? familyIncomeExclusion;
+  String? incomeTaxExclusion;
+  String? sirAdjudicationExclusion;
+  String? caaApplicationExclusion;
+  String? asddListExclusion;
 
   Beneficiary({
     required this.beneficiaryId,
@@ -35,6 +40,11 @@ class Beneficiary {
     required this.familyHeadName,
     required this.familyMembersCount,
     required this.familyId,
+      this.familyIncomeExclusion,
+      this.incomeTaxExclusion,
+      this.sirAdjudicationExclusion,
+      this.caaApplicationExclusion,
+      this.asddListExclusion,
   });
 
   factory Beneficiary.fromJson(Map<String, dynamic> json) {
@@ -56,6 +66,11 @@ class Beneficiary {
       familyHeadName: json['familyHeadName'] ?? '',
       familyMembersCount: json['familyMembersCount'] ?? 0,
       familyId: json['familyId'] ?? '',
+      familyIncomeExclusion: json['familyIncomeExclusion'] ?? '',
+      incomeTaxExclusion: json['incomeTaxExclusion'] ?? '',
+      sirAdjudicationExclusion: json['sirAdjudicationExclusion'] ?? '',
+      caaApplicationExclusion: json['caaApplicationExclusion'] ?? '',
+      asddListExclusion: json['asddListExclusion'] ?? '',
     );
   }
 
@@ -78,6 +93,11 @@ class Beneficiary {
       'familyHeadName': familyHeadName,
       'familyMembersCount': familyMembersCount,
       'familyId': familyId,
+      'familyIncomeExclusion': familyIncomeExclusion ?? '',
+      'incomeTaxExclusion': incomeTaxExclusion ?? '',
+      'sirAdjudicationExclusion': sirAdjudicationExclusion ?? '',
+      'caaApplicationExclusion': caaApplicationExclusion ?? '',
+      'asddListExclusion': asddListExclusion ?? '',
     };
   }
 }
